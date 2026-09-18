@@ -1,0 +1,6 @@
+*.md text eol=lf
+*.html text eol=lf
+*.png binary
+*.ms14 binary
+.gitattributes text eol=lf
+.gitignore text eol=lf
