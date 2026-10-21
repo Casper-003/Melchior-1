@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>流光毛玻璃 · 本地测试</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#fff;color:var(--text1,#222);font:14px/1.6 system-ui,sans-serif}
+  .bili-header__bar{height:64px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#fff}
+  .brand{font-size:22px;font-weight:700}.notice{color:var(--text2,#666);font-size:13px}
+  .video-container-v1{max-width:1400px;margin:24px auto;padding:0 28px;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:24px}
+  .video-info-container{margin:0 0 16px;padding:8px 0}.video-info-title{font-size:23px;margin:0 0 6px}
+  #bilibili-player{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+  video{display:block;width:100%;height:100%}.danmaku{position:absolute;top:30px;left:12%;color:white;text-shadow:1px 1px 3px #000;pointer-events:none}
+  .video-toolbar-container{margin-top:14px;display:flex;align-items:center;gap:24px;min-height:56px}
+  .video-desc-container{margin-top:14px;min-height:98px}.right-container-inner{margin-top:0}.up-panel-container{margin-bottom:18px}
+  .video-page-card-small{display:flex;gap:10px;margin:14px 0}.thumb{width:116px;flex-shrink:0;aspect-ratio:16/10;border-radius:9px;background:linear-gradient(140deg,#456a9d,#a5c5ca)}
+  .title{color:inherit;font-size:13px;line-height:1.5}.playinfo{font-size:12px;opacity:.6}
+  #fullscreen{position:absolute;right:12px;bottom:10px;background:#0008;color:white;border:1px solid #fff8;border-radius:5px;padding:8px;cursor:pointer}
+  #comment{padding-top:24px}.comment{padding:15px 0;border-bottom:1px solid #ffffff18}
+  #source{display:none}
+</style>
+<div id="app">
+  <nav class="bili-header__bar"><span class="brand">流光毛玻璃</span><span class="notice">本地测试画面 · 非B站实际页面</span><span>首页　动态　收藏</span></nav>
+  <main class="video-container-v1">
+    <section class="left-container">
+      <div class="video-info-container"><h1 class="video-info-title">让色彩，从画面边缘溢出</h1><div class="video-info-detail">本地生成视频 · 边缘溢光测试</div></div>
+      <div id="bilibili-player" class="bpx-player-container"><video muted autoplay playsinline></video><span class="danmaku">播放器、字幕和弹幕保持清晰</span><button id="fullscreen">全屏测试</button></div>
+      <div class="video-toolbar-container">♡ 点赞　　☆ 收藏　　↗ 分享</div>
+      <div class="video-desc-container">边缘的颜色化作光晕，向页面柔和扩散。<br>色光随播放变化；设置入口在右下角。</div>
+      <div id="comment"><strong>评论区域</strong><div class="comment">这是测试用的占位内容，用于检查页面层级与文字对比度。</div></div>
+    </section>
+    <aside class="right-container"><div class="right-container-inner"><div class="up-panel-container">◉ 流光实验室<br><small>动态氛围 · 平板优先</small></div>
+      <div class="video-page-card-small"><div class="thumb"></div><div><div class="title">山海之间，缓缓流动的光</div><div class="playinfo">测试推荐 · 04:28</div></div></div>
+      <div class="video-page-card-small"><div class="thumb" style="background:linear-gradient(140deg,#a95970,#dfbb9b)"></div><div><div class="title">把夕阳装进整个页面</div><div class="playinfo">测试推荐 · 06:12</div></div></div>
+      <div class="video-page-card-small"><div class="thumb" style="background:linear-gradient(140deg,#447a7b,#96bc9b)"></div><div><div class="title">林间的风与安静的午后</div><div class="playinfo">测试推荐 · 03:56</div></div></div>
+      <div class="video-page-card-small"><div class="thumb" style="background:linear-gradient(140deg,#5b527c,#ab9cbe)"></div><div><div class="title">夜色渐浓，灯光渐暖</div><div class="playinfo">测试推荐 · 08:03</div></div></div>
+    </div></aside>
+  </main>
+</div>
+<canvas id="source" width="640" height="360"></canvas>
+<script>
+  const source = document.getElementById('source');
+  const ctx = source.getContext('2d');
+  let theme = 'cool';
+  function paint() {
+    if (theme.startsWith('edge-probe')) {
+      ctx.fillStyle='#15304d';ctx.fillRect(0,0,640,360);
+      ctx.fillStyle='#ed6a49';ctx.fillRect(0,0,80,360);
+      ctx.fillStyle='#42d5bd';ctx.fillRect(560,0,80,360);
+      ctx.fillStyle='#4d77e8';ctx.fillRect(0,0,640,44);
+      ctx.fillStyle='#a45be0';ctx.fillRect(0,316,640,44);
+      ctx.fillStyle=theme.endsWith('a')?'#ffffff':'#000000';ctx.fillRect(180,100,280,160);
+      return;
+    }
+    const t = performance.now() / 2000;
+    const warm = theme === 'warm';
+    const g = ctx.createLinearGradient(0,0,640,360);
+    g.addColorStop(0,warm?'#f28245':'#125fa0');g.addColorStop(.55,warm?'#ba4368':'#53c7d2');g.addColorStop(1,warm?'#402b68':'#143c77');
+    ctx.fillStyle=g;ctx.fillRect(0,0,640,360);
+    ctx.fillStyle=warm?'#ffe1a1':'#d2f6ee';ctx.beginPath();ctx.arc(410+Math.sin(t)*50,105,46,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<4;i++){ctx.fillStyle=`rgba(12,33,62,${.15+i*.12})`;ctx.beginPath();ctx.moveTo(0,250+i*18);for(let x=0;x<=640;x+=8){ctx.lineTo(x,250+i*18+Math.sin(x/80+t+i)*22)}ctx.lineTo(640,360);ctx.lineTo(0,360);ctx.fill()}
+  }
+  paint();setInterval(paint,40);
+  const stream=source.captureStream(24);
+  const attach=async(el)=>{el.muted=true;el.srcObject=stream;await el.play();};
+  attach(document.querySelector('video'));
+  window.fixture={
+    setTheme(value){theme=value;paint()},
+    async replaceVideo(){const old=document.querySelector('video');old.pause();const next=document.createElement('video');next.setAttribute('playsinline','');old.replaceWith(next);await attach(next)},
+    async record(){
+      const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8'});const chunks=[];
+      recorder.ondataavailable=e=>chunks.push(e.data);
+      return await new Promise(resolve=>{recorder.onstop=async()=>resolve(Array.from(new Uint8Array(await new Blob(chunks).arrayBuffer())));recorder.start();setTimeout(()=>recorder.stop(),600)})
+    }
+  };
+  document.getElementById('fullscreen').onclick=()=>document.getElementById('bilibili-player').requestFullscreen();
+</script>
+<script src="/bilibili-ambient-glass.user.js"></script>
+</html>
